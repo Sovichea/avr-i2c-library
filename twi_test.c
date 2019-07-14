@@ -1,9 +1,9 @@
 /*
- * TWI_Test.c
- *
- * Created: 08-Jun-19 10:06:47 AM
- * Author : TEP SOVICHEA
- */ 
+* TWI_Test.c
+*
+* Created: 08-Jun-19 10:06:47 AM
+* Author : TEP SOVICHEA
+*/
 
 #include "uart.h"
 #include "twi_master.h"
@@ -25,7 +25,7 @@
 #define ACCEL_ZOUT_L	0x40
 #define PWR_MGMT_1		0x6B
 
-typedef struct 
+typedef struct
 {
 	float x;
 	float y;
@@ -42,7 +42,7 @@ void mpu_init(void);
 void mpu_get_accel_raw(mpu_data_t* mpu_data);
 void mpu_get_accel(mpu_data_t* mpu_data);
 
-	
+
 /************************************************************************/
 /*							Function definitions                        */
 /************************************************************************/
@@ -103,21 +103,21 @@ void mpu_get_accel(mpu_data_t* mpu_data)
 
 int main(void)
 {
-    /* Initialize UART */
-    uart_init(250000); // bps
-    cli_reset();
-    puts(BY "Initializing TWI_Test Project...\n" RESET);
-    
-    /* Initialize project configuration */
+	/* Initialize UART */
+	uart_init(250000); // bps
+	cli_reset();
+	puts(BY "Initializing TWI_Test Project...\n" RESET);
+	
+	/* Initialize project configuration */
 	tw_init(TW_FREQ_400K, true); // set I2C Frequency, enable internal pull-up
 	mpu_init();
 	mpu_data_t accel;
-    
-    puts(BG CURSOR_RIGHT("14") 
-        "--------------- Application Started ---------------\n" RESET);
-    
+	
+	puts(BG CURSOR_RIGHT("14")
+	"--------------- Application Started ---------------\n" RESET);
+	
 	while (1)
-    {		
+	{
 		puts("Read accelerometer data.");
 		mpu_get_accel(&accel);
 		printf("Accel X: %5.2f\n", accel.x);
