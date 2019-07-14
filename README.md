@@ -41,7 +41,9 @@ This functions receives the data bytes from the desired slave address and return
 
 ## Example
 
-The example provided with this library is tested with MPU6050 to read the value of acceleration in X, Y and Z axis. In order to activate MPU6050, we have to write `0` to `PWR_MGMT_1` register as shown below:
+The example provided with this library is tested with MPU6050 to read the value of acceleration in X, Y and Z axis. This use this [UART Library](https://github.com/Sovichea/avr-uart-library) to print the result to the terminal but you can use any library and modified the library accordingly.
+
+In order to activate MPU6050, we have to write `0` to `PWR_MGMT_1` register as shown below:
 
 ```c
 void mpu_init(void)
@@ -85,4 +87,4 @@ In this situation, since we write and then want to wait for the response from MP
 
 ## Debugging I2C Transaction
 
-Found in `tw_master.h`, you can set `DEBUG_LOG` variable to `1` or `0` to enable or disable debug functionality of the library. However, this requires that you have UART library included in your project.
+Found in `tw_master.h`, you can set `DEBUG_LOG` variable to `1` or `0` to enable or disable debug functionality of the library. This will print each and every I2C transaction and current state of I2C Bus.
