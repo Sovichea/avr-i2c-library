@@ -1,18 +1,18 @@
 /*
- * twi_master.c
- *
- * Created: 09-Jun-19 11:20:17 AM
- *  Author: TEP SOVICHEA
- */ 
+* twi_master.c
+*
+* Created: 09-Jun-19 11:20:17 AM
+*  Author: TEP SOVICHEA
+*/
 
 #include "twi_master.h"
 
 static ret_code_t tw_start(void)
 {
 	/* Send START condition */
-#if DEBUG_LOG
+	#if DEBUG_LOG
 	printf(BG "Send START condition..." RESET);
-#endif
+	#endif
 	TWCR =  (1 << TWINT) | (1 << TWEN) | (1 << TWSTA);
 	
 	/* Wait for TWINT flag to set */
@@ -21,15 +21,15 @@ static ret_code_t tw_start(void)
 	/* Check error */
 	if (TW_STATUS != TW_START && TW_STATUS != TW_REP_START)
 	{
-#if DEBUG_LOG
+		#if DEBUG_LOG
 		printf("\n");
-#endif
+		#endif
 		return TW_STATUS;
 	}
 	
-#if DEBUG_LOG
+	#if DEBUG_LOG
 	printf("SUCCESS\n");
-#endif
+	#endif
 	return SUCCESS;
 }
 
@@ -37,9 +37,9 @@ static ret_code_t tw_start(void)
 static void tw_stop(void)
 {
 	/* Send STOP condition */
-#if DEBUG_LOG
+	#if DEBUG_LOG
 	puts(BG "Send STOP condition." RESET);
-#endif
+	#endif
 	TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWSTO);
 }
 
@@ -47,9 +47,9 @@ static void tw_stop(void)
 static ret_code_t tw_write_sla(uint8_t sla)
 {
 	/* Transmit slave address with read/write flag */
-#if DEBUG_LOG
+	#if DEBUG_LOG
 	printf(BG "Write SLA + R/W: 0x%02X..." RESET, sla);
-#endif
+	#endif
 	TWDR = sla;
 	TWCR = (1 << TWINT) | (1 << TWEN);
 	
@@ -57,15 +57,15 @@ static ret_code_t tw_write_sla(uint8_t sla)
 	while (!(TWCR & (1 << TWINT)));
 	if (TW_STATUS != TW_MT_SLA_ACK && TW_STATUS != TW_MR_SLA_ACK)
 	{
-#if DEBUG_LOG
-	printf("\n");
-#endif
+		#if DEBUG_LOG
+		printf("\n");
+		#endif
 		return TW_STATUS;
 	}
 
-#if DEBUG_LOG
+	#if DEBUG_LOG
 	printf("SUCCESS\n");
-#endif
+	#endif
 	return SUCCESS;
 }
 
@@ -73,9 +73,9 @@ static ret_code_t tw_write_sla(uint8_t sla)
 static ret_code_t tw_write(uint8_t data)
 {
 	/* Transmit 1 byte*/
-#if DEBUG_LOG
+	#if DEBUG_LOG
 	printf(BG "Write data byte: 0x%02X..." RESET, data);
-#endif
+	#endif
 	TWDR = data;
 	TWCR = (1 << TWINT) | (1 << TWEN);
 	
@@ -83,15 +83,15 @@ static ret_code_t tw_write(uint8_t data)
 	while (!(TWCR & (1 << TWINT)));
 	if (TW_STATUS != TW_MT_DATA_ACK)
 	{
-#if DEBUG_LOG
+		#if DEBUG_LOG
 		printf("\n");
-#endif
+		#endif
 		return TW_STATUS;
 	}
 	
-#if DEBUG_LOG
+	#if DEBUG_LOG
 	printf("SUCCESS\n");
-#endif
+	#endif
 	return SUCCESS;
 }
 
@@ -117,9 +117,9 @@ static uint8_t tw_read(bool read_ack)
 		}
 	}
 	uint8_t data = TWDR;
-#if DEBUG_LOG
+	#if DEBUG_LOG
 	printf(BG "Read data byte: 0x%02X\n" RESET, data);
-#endif
+	#endif
 	return data;
 }
 
@@ -129,9 +129,9 @@ void tw_init(twi_freq_mode_t twi_freq_mode, bool pullup_en)
 	DDRC  |= (1 << TW_SDA_PIN) | (1 << TW_SCL_PIN);
 	if (pullup_en)
 	{
-#if DEBUG_LOG
+		#if DEBUG_LOG
 		puts(BG "Enable pull-up resistor." RESET);
-#endif
+		#endif
 		PORTC |= (1 << TW_SDA_PIN) | (1 << TW_SCL_PIN);
 	}
 	else
@@ -147,10 +147,10 @@ void tw_init(twi_freq_mode_t twi_freq_mode, bool pullup_en)
 		SCL_freq = 16MHz/(16 + 2*72*1) = 100KHz	*/
 		TWBR = 72;
 		break;
-	
+		
 		case TW_FREQ_250K:
 		/* Set bit rate register 24 and prescaler to 1 resulting in
-		SCL_freq = 16MHz/(16 + 2*24*1) = 250KHz	*/		
+		SCL_freq = 16MHz/(16 + 2*24*1) = 250KHz	*/
 		TWBR = 24;
 		break;
 		
@@ -185,7 +185,7 @@ ret_code_t tw_master_transmit(uint8_t slave_addr, uint8_t* p_data, uint8_t len, 
 	
 	/* Send data byte in single or burst mode */
 	for (int i = 0; i < len; ++i)
-	{	
+	{
 		error_code = tw_write(p_data[i]);
 		if (error_code != SUCCESS)
 		{
